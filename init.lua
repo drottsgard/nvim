@@ -159,10 +159,10 @@ require('lazy').setup({
     config = function()
       require('onedark').setup({
         style = 'warmer',
-        toggle_style_key = '<leader>ts',                                               -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
+        toggle_style_key = '<leader>ts',                                                     -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
         toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
         lualine = {
-          transparent = false,                                                         -- lualine center bar transparency
+          transparent = false,                                                               -- lualine center bar transparency
         },
       })
       vim.cmd.colorscheme 'onedark'
@@ -230,6 +230,22 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
+  { 'github/copilot.vim' },
+
+  {
+    'kdheepak/lazygit.nvim',
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -246,9 +262,25 @@ require('lazy').setup({
   -- require 'custom.plugins.none-ls',
 }, {})
 
+vim.keymap.set('i', '<CTRL-a>', 'copilot#Accept("\\<CR>")', {
+  expr = true,
+  replace_keycodes = false,
+  desc = 'Accept Copilot suggestion',
+})
+vim.g.copilot_no_tab_map = true
+vim.g.copilot_filetypes = { markdown = true, gitcommit = true, sh = true }
+
+-- key map that runs "source %", keymap should be leader leader x
+vim.keymap.set('n', '<leader>x', ':source %<CR>', { desc = 'Source current file' })
+
+
+vim.keymap.set('n', '<leader>lz', ':LazyGit<CR>', { desc = '[L]azy [G]it' })
+
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+
+vim.opt.scrolloff = 8
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -471,7 +503,7 @@ end
 --  define the property 'filetypes' to the map in question.
 local servers = {
   -- clangd = {},
-  -- gopls = {},
+  gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
@@ -497,6 +529,7 @@ local servers = {
     end
   },
   tailwindcss = {},
+  jsonls = {},
 }
 
 -- Setup neovim lua configuration
@@ -578,7 +611,7 @@ cmp.setup {
 -- vim: ts=2 sts=2 sw=2 et
 
 function ColorMyPencils(color)
-  -- color = color or ''
+  -- color = color or 'dark'
   vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
   vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
   -- vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'none' }) -- Sets the end area of a file to transparent
@@ -622,5 +655,6 @@ ColorMyPencils()
 --
 
 
-vim.keymap.set('n', '<leader>f', ':!npx prettier % --write<CR><CR>', { desc = '[f]ormat files' })
+vim.keymap.set('n', '<leader>f', ':!./node_modules/.bin/prettier % --write<CR><CR>', { desc = '[f]ormat files' })
 vim.keymap.set('n', '<leader>yf', ':r !echo % <CR> dd', { desc = '[y]ank filename' })
+vim.keymap.set('n', '<leader>cb', ':bd <CR>', { desc = '[c]lose [b]uffer' });
