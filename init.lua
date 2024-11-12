@@ -501,9 +501,11 @@ end
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+local util = require 'lspconfig.util'
 local servers = {
   -- clangd = {},
   gopls = {},
+  stylelint_lsp = {},
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
@@ -530,6 +532,15 @@ local servers = {
   },
   tailwindcss = {},
   jsonls = {},
+
+  tsserver = {
+    single_file_support = false,
+    root_dir = util.root_pattern('package.json'),
+  },
+
+  denols = {
+    root_dir = util.root_pattern('deno.json'),
+  },
 }
 
 -- Setup neovim lua configuration
@@ -555,6 +566,9 @@ mason_lspconfig.setup_handlers {
       settings = (servers[server_name] or {}).settings,
       -- settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
+
+      root_dir = (servers[server_name] or {}).root_dir,
+      single_file_support = (servers[server_name] or {}).single_file_support,
     }
   end,
 }
