@@ -670,6 +670,9 @@ ColorMyPencils()
 -- })
 --
 
+vim.api.nvim_create_user_command('TypeCheck', function(_)
+  vim.cmd('compiler tsc | setlocal makeprg=./node_modules/.bin/tsc | make')
+end, {})
 
 vim.keymap.set('n', '<leader>f', ':!./node_modules/.bin/prettier % --write<CR><CR>', { desc = '[f]ormat files' })
 vim.keymap.set('n', '<leader>yf', ':r !echo % <CR> dd', { desc = '[y]ank filename' })
