@@ -677,3 +677,42 @@ end, {})
 vim.keymap.set('n', '<leader>f', ':!./node_modules/.bin/prettier % --write<CR><CR>', { desc = '[f]ormat files' })
 vim.keymap.set('n', '<leader>yf', ':r !echo % <CR> dd', { desc = '[y]ank filename' })
 vim.keymap.set('n', '<leader>cb', ':bd <CR>', { desc = '[c]lose [b]uffer' });
+vim.api.nvim_create_autocmd("BufNewFile", {
+  pattern = "*.tsx",
+  callback = function()
+    -- Get the file name without the extension
+    local filename = vim.fn.expand("%:t:r")
+    -- Boilerplate content
+    local lines = {
+      "import React from 'react';",
+      "",
+      "export function " .. filename .. "() {",
+      "  return <h1>" .. filename .. "</h1>;",
+      "}",
+    }
+    -- Insert the lines into the buffer
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    -- Move the cursor to the first blank line for editing
+    vim.cmd("normal! G")
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufNewFile", {
+  pattern = "*.test.tsx",
+  callback = function()
+    -- Get the file name without the `.test` suffix
+    local filename = vim.fn.expand("%:t:r"):gsub("%.test$", "")
+    -- Boilerplate for .test.tsx files
+    local lines = {
+      "import React from 'react';",
+      "",
+      "describe('" .. filename .. "', () => {",
+      "  it.todo('should do something');",
+      "});",
+    }
+    -- Insert the lines into the buffer
+    vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+    -- Move the cursor to the first blank line for editing
+    vim.cmd("normal! G")
+  end,
+})
