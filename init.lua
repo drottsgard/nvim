@@ -159,10 +159,11 @@ require('lazy').setup({
     config = function()
       require('onedark').setup({
         style = 'warmer',
-        toggle_style_key = '<leader>ts',                                                     -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
-        toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
+        toggle_style_key = '<leader>ts',           -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
+        -- toggle_style_list = { 'warmer', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
+        toggle_style_list = { 'light', 'warmer' }, -- List of styles to toggle between
         lualine = {
-          transparent = false,                                                               -- lualine center bar transparency
+          transparent = false,                     -- lualine center bar transparency
         },
       })
       vim.cmd.colorscheme 'onedark'
